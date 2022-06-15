@@ -1,6 +1,8 @@
 package com.sprindemo.trsbackend.entry;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sprindemo.trsbackend.user.User;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
@@ -8,6 +10,7 @@ import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @FilterDef(name = "dateFilter",
         parameters = {
@@ -17,6 +20,7 @@ import java.time.LocalDate;
 @Entity(name = "Entry")
 @Table(name = "entry")
 @Filter(name = "dateFilter", condition = "date_trunc(\"month\",date) == date_trunc(\"month\",entryMonth)")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Entry {
     @Id
     @GeneratedValue
@@ -27,6 +31,7 @@ public class Entry {
     private LocalDate date;
     private String description;
 
+    private String subCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     private User user;
@@ -34,12 +39,23 @@ public class Entry {
     public Entry(){
 
     }
-    public Entry(String code, Integer time, LocalDate date, String description) {
+
+    public Entry(String code, Integer time, String date, String description, String subCode) {
+        this.code = code;
+        this.time = time;
+        this.subCode = subCode;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
+        this.date = LocalDate.parse(date,formatter);
+        this.description = description;
+    }
+    public Entry(String code, Integer time, LocalDate date, String description, String subCode) {
         this.code = code;
         this.time = time;
         this.date = date;
         this.description = description;
+        this.subCode = subCode;
     }
+
 
     @Override
     public boolean equals(Object o){
@@ -100,6 +116,16 @@ public class Entry {
         this.user = user;
     }
 
+
+
+    public String getSubCode() {
+        return subCode;
+    }
+
+    public void setSubCode(String subCode) {
+        this.subCode = subCode;
+    }
+
     @Override
     public String toString() {
         return "Entry{" +
@@ -108,7 +134,12 @@ public class Entry {
                 ", time=" + time +
                 ", date=" + date +
                 ", description='" + description + '\'' +
+                ", subCode='" + subCode + '\'' +
                 ", user=" + user +
                 '}';
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
