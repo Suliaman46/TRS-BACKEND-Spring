@@ -1,25 +1,17 @@
 package com.sprindemo.trsbackend.entry;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sprindemo.trsbackend.user.User;
-import org.hibernate.annotations.Filter;
-import org.hibernate.annotations.FilterDef;
-import org.hibernate.annotations.ParamDef;
+
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@FilterDef(name = "dateFilter",
-        parameters = {
-                @ParamDef(name = "entryMonth", type = "java.time.LocalDate")
-        })
 
 @Entity(name = "Entry")
 @Table(name = "entry")
-@Filter(name = "dateFilter", condition = "date_trunc(\"month\",date) == date_trunc(\"month\",entryMonth)")
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Entry {
     @Id

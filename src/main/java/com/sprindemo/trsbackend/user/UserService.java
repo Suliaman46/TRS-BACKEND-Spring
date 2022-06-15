@@ -35,17 +35,11 @@ public class UserService {
         return userRepository.findByUserName(name);
     }
 
-//    @Autowired
-////    private EntityManager em;
 
     public List<Entry> getUserEntries(String name, String dateString) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-d");
         LocalDate date = LocalDate.parse(dateString,formatter);
-//
-//        Session session = em.unwrap(Session.class);
-//        Filter filter = session.enableFilter("dateFilter");
-//        filter.setParameter("entryMonth",date.withDayOfMonth(1));
-//        List<Entry> temp  = em.createQuery("select p from Entry ")
+
         User user = this.getUser(name);
         if(user == null){
             this.createUser(name);
